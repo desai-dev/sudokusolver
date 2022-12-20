@@ -87,7 +87,7 @@ def split_boxes(img):
 image_solved_digits = img_blank.copy()
 boxes = split_boxes(image_warp_coloured)
 cv2.imshow("box", boxes[4])
-cv2.waitKey(10000)
+cv2.waitKey(0)
 # numbers = get_prediction(boxes, model)
 # image_detected_digits  display_numbers(image_detected_digits, numbers, color=(255, 0, 255))
 # numbers = np.asarray(numbers)
