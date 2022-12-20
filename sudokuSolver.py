@@ -68,5 +68,5 @@ def check_valid(board, num, row, column):
 
     return True
 
-solve(board)
-print(board)
+#solve(board)
+#print(board)
