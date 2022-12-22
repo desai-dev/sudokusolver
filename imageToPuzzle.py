@@ -1,8 +1,7 @@
 ## Could make a neural net to see if a puzzle is straight up or if its like ilted and conditionally add a border to the sraight up one
-
-from turtle import color
 import cv2
 import numpy as np
+import tensorflow as tf
 
 image_path = './tilted_puzzle.png'
 image_height = 450
@@ -84,12 +83,40 @@ def split_boxes(img):
             boxes.append(box)
     return boxes
 
+# def initialize_prediction_model():
+#     model = tf.keras.models.load_model('my_model')
+#     return model
+
+# def get_prediction(boxes, model):
+#     result = []
+#     for image in boxes:
+#         # Prep Img
+#         img = np.asarray(image)
+#         img = img[4:img.shape[0] - 4, 4:img.shape[1] - 4]
+#         img = cv2.resize(img, (28, 28))
+#         img = img/255
+#         img = img.reshape(1, 28, 28, 1)
+#         # Get Prediction
+#         predictions = model.predict(img)
+#         class_index = np.argmax(predictions, axis=-1)
+#         probability_val = np.amax(predictions)
+#         print(class_index, probability_val)
+#         # Save to Result
+#         if probability_val > 0.5:
+#             result.append(class_index[0])
+#         else:
+#             result.append(0)
+#     return result
+
+#model = initialize_prediction_model()
+
 image_solved_digits = img_blank.copy()
 boxes = split_boxes(image_warp_coloured)
-cv2.imshow("box", boxes[4])
-cv2.waitKey(0)
+
+# cv2.imwrite('png', boxes[0])
+# cv2.imshow("box", boxes[4])
+# cv2.waitKey(0)
 # numbers = get_prediction(boxes, model)
 # image_detected_digits  display_numbers(image_detected_digits, numbers, color=(255, 0, 255))
 # numbers = np.asarray(numbers)
 # position_array = np.where(numbers > 0, 0, 1)
-
