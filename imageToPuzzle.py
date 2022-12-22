@@ -1,7 +1,7 @@
-## Could make a neural net to see if a puzzle is straight up or if its like ilted and conditionally add a border to the sraight up one
 import cv2
 import numpy as np
 import tensorflow as tf
+from sudokuSolver import *
 
 image_path = './tilted_puzzle.png'
 image_height = 450
@@ -17,8 +17,7 @@ def preprocess(img):
 
 img = cv2.imread(image_path)
 img = cv2.resize(img, (image_width, image_height))
-#img = cv2.copyMakeBorder(img, 40, 40, 40, 40, cv2.BORDER_CONSTANT, value=[0, 0, 0]) # adds border
-img_blank = np.zeros((image_height, image_width, 3), np.uint8) #MIGHT NOT NEED THIS
+img_blank = np.zeros((image_height, image_width, 3), np.uint8) 
 img_threshold = preprocess(img)
 
 
@@ -83,40 +82,38 @@ def split_boxes(img):
             boxes.append(box)
     return boxes
 
-# def initialize_prediction_model():
-#     model = tf.keras.models.load_model('my_model')
-#     return model
+def initialize_prediction_model():
+    model = tf.keras.models.load_model('new_model.h5')
+    return model
 
-# def get_prediction(boxes, model):
-#     result = []
-#     for image in boxes:
-#         # Prep Img
-#         img = np.asarray(image)
-#         img = img[4:img.shape[0] - 4, 4:img.shape[1] - 4]
-#         img = cv2.resize(img, (28, 28))
-#         img = img/255
-#         img = img.reshape(1, 28, 28, 1)
-#         # Get Prediction
-#         predictions = model.predict(img)
-#         class_index = np.argmax(predictions, axis=-1)
-#         probability_val = np.amax(predictions)
-#         print(class_index, probability_val)
-#         # Save to Result
-#         if probability_val > 0.5:
-#             result.append(class_index[0])
-#         else:
-#             result.append(0)
-#     return result
+def get_prediction(boxes, model):
+    result = []
+    for image in boxes:
+        # Prep Img
+        img = np.asarray(image)
+        img = img[4:img.shape[0] - 4, 4:img.shape[1] - 4]
+        img = cv2.resize(img, (28, 28))
+        img = img/255
+        img = img.reshape(1, 28, 28, 1)
+        # Get Prediction
+        predictions = model.predict(img)
+        class_index = np.argmax(predictions, axis=-1)
+        probability_val = np.amax(predictions)
+        #print(class_index, probability_val)
+        # Save to Result
+        if probability_val > 0.6:
+            result.append(class_index[0])
+        else:
+            result.append(0)
+    return result
 
-#model = initialize_prediction_model()
+model = initialize_prediction_model()
 
 image_solved_digits = img_blank.copy()
 boxes = split_boxes(image_warp_coloured)
+numbers = get_prediction(boxes, model)
 
-# cv2.imwrite('png', boxes[0])
-# cv2.imshow("box", boxes[4])
-# cv2.waitKey(0)
-# numbers = get_prediction(boxes, model)
-# image_detected_digits  display_numbers(image_detected_digits, numbers, color=(255, 0, 255))
-# numbers = np.asarray(numbers)
-# position_array = np.where(numbers > 0, 0, 1)
+numbers = np.array(numbers)
+board = np.reshape(numbers, (9,9))
+print(board)
+print(solve(board))
